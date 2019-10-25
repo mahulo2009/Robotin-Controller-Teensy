@@ -16,3 +16,6 @@
 [submodule "lib/TaskScheduler"]
 	path = lib/TaskScheduler
 	url = https://github.com/arkhipenko/TaskScheduler.git
+[submodule "src"]
+	path = src
+	url = git@github.com:mahulo2009/Robotin-Controller-Main.git
