@@ -1,0 +1,18 @@
+[submodule "lib/EncoderDrive"]
+	path = lib/EncoderDrive
+	url = https://github.com/PaulStoffregen/Encoder.git
+[submodule "lib/ArduinoDualMotor"]
+	path = lib/ArduinoDualMotor
+	url = git@github.com:mahulo2009/ArduinoDualMotor.git
+[submodule "lib/Pid"]
+	path = lib/Pid
+	url = git@github.com:mahulo2009/Pid.git
+[submodule "lib/RobotFrameWork"]
+	path = lib/RobotFrameWork
+	url = git@github.com:mahulo2009/RobotFrameWork.git
+[submodule "lib/Wheel"]
+	path = lib/Wheel
+	url = git@github.com:mahulo2009/Wheel.git
+[submodule "lib/TaskScheduler"]
+	path = lib/TaskScheduler
+	url = https://github.com/arkhipenko/TaskScheduler.git
