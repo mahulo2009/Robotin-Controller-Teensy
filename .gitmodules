@@ -19,3 +19,9 @@
 [submodule "src"]
 	path = src
 	url = git@github.com:mahulo2009/Robotin-Controller-Main.git
+[submodule "lib/Imu"]
+	path = lib/Imu
+	url = git@github.com:mahulo2009/Imu.git
+[submodule "lib/Mecha_QMC5883L"]
+	path = lib/Mecha_QMC5883L
+	url = https://github.com/keepworking/Mecha_QMC5883L.git

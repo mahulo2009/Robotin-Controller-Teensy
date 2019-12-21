@@ -30,13 +30,23 @@ namespace rosapi
       typedef char* _examples_type;
       _examples_type st_examples;
       _examples_type * examples;
+      uint32_t constnames_length;
+      typedef char* _constnames_type;
+      _constnames_type st_constnames;
+      _constnames_type * constnames;
+      uint32_t constvalues_length;
+      typedef char* _constvalues_type;
+      _constvalues_type st_constvalues;
+      _constvalues_type * constvalues;
 
     TypeDef():
       type(""),
       fieldnames_length(0), fieldnames(NULL),
       fieldtypes_length(0), fieldtypes(NULL),
       fieldarraylen_length(0), fieldarraylen(NULL),
-      examples_length(0), examples(NULL)
+      examples_length(0), examples(NULL),
+      constnames_length(0), constnames(NULL),
+      constvalues_length(0), constvalues(NULL)
     {
     }
 
@@ -100,6 +110,30 @@ namespace rosapi
       offset += 4;
       memcpy(outbuffer + offset, this->examples[i], length_examplesi);
       offset += length_examplesi;
+      }
+      *(outbuffer + offset + 0) = (this->constnames_length >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (this->constnames_length >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (this->constnames_length >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (this->constnames_length >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->constnames_length);
+      for( uint32_t i = 0; i < constnames_length; i++){
+      uint32_t length_constnamesi = strlen(this->constnames[i]);
+      varToArr(outbuffer + offset, length_constnamesi);
+      offset += 4;
+      memcpy(outbuffer + offset, this->constnames[i], length_constnamesi);
+      offset += length_constnamesi;
+      }
+      *(outbuffer + offset + 0) = (this->constvalues_length >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (this->constvalues_length >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (this->constvalues_length >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (this->constvalues_length >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->constvalues_length);
+      for( uint32_t i = 0; i < constvalues_length; i++){
+      uint32_t length_constvaluesi = strlen(this->constvalues[i]);
+      varToArr(outbuffer + offset, length_constvaluesi);
+      offset += 4;
+      memcpy(outbuffer + offset, this->constvalues[i], length_constvaluesi);
+      offset += length_constvaluesi;
       }
       return offset;
     }
@@ -198,11 +232,51 @@ namespace rosapi
       offset += length_st_examples;
         memcpy( &(this->examples[i]), &(this->st_examples), sizeof(char*));
       }
+      uint32_t constnames_lengthT = ((uint32_t) (*(inbuffer + offset))); 
+      constnames_lengthT |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1); 
+      constnames_lengthT |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2); 
+      constnames_lengthT |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3); 
+      offset += sizeof(this->constnames_length);
+      if(constnames_lengthT > constnames_length)
+        this->constnames = (char**)realloc(this->constnames, constnames_lengthT * sizeof(char*));
+      constnames_length = constnames_lengthT;
+      for( uint32_t i = 0; i < constnames_length; i++){
+      uint32_t length_st_constnames;
+      arrToVar(length_st_constnames, (inbuffer + offset));
+      offset += 4;
+      for(unsigned int k= offset; k< offset+length_st_constnames; ++k){
+          inbuffer[k-1]=inbuffer[k];
+      }
+      inbuffer[offset+length_st_constnames-1]=0;
+      this->st_constnames = (char *)(inbuffer + offset-1);
+      offset += length_st_constnames;
+        memcpy( &(this->constnames[i]), &(this->st_constnames), sizeof(char*));
+      }
+      uint32_t constvalues_lengthT = ((uint32_t) (*(inbuffer + offset))); 
+      constvalues_lengthT |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1); 
+      constvalues_lengthT |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2); 
+      constvalues_lengthT |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3); 
+      offset += sizeof(this->constvalues_length);
+      if(constvalues_lengthT > constvalues_length)
+        this->constvalues = (char**)realloc(this->constvalues, constvalues_lengthT * sizeof(char*));
+      constvalues_length = constvalues_lengthT;
+      for( uint32_t i = 0; i < constvalues_length; i++){
+      uint32_t length_st_constvalues;
+      arrToVar(length_st_constvalues, (inbuffer + offset));
+      offset += 4;
+      for(unsigned int k= offset; k< offset+length_st_constvalues; ++k){
+          inbuffer[k-1]=inbuffer[k];
+      }
+      inbuffer[offset+length_st_constvalues-1]=0;
+      this->st_constvalues = (char *)(inbuffer + offset-1);
+      offset += length_st_constvalues;
+        memcpy( &(this->constvalues[i]), &(this->st_constvalues), sizeof(char*));
+      }
      return offset;
     }
 
     const char * getType(){ return "rosapi/TypeDef"; };
-    const char * getMD5(){ return "bd8529b0edb168fde8dd58032743f1f7"; };
+    const char * getMD5(){ return "80597571d79bbeef6c9c4d98f30116a0"; };
 
   };
 

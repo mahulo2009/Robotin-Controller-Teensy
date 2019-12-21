@@ -99,7 +99,7 @@ static const char SERVICERESPONSEDETAILS[] = "rosapi/ServiceResponseDetails";
     }
 
     const char * getType(){ return SERVICERESPONSEDETAILS; };
-    const char * getMD5(){ return "d088db0da260a2cde072246a5f577519"; };
+    const char * getMD5(){ return "a6b8995777f214f2ed97a1e4890feb10"; };
 
   };
 
