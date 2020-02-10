@@ -18,10 +18,13 @@ static const char SETGOAL[] = "rtabmap_ros/SetGoal";
       _node_id_type node_id;
       typedef const char* _node_label_type;
       _node_label_type node_label;
+      typedef const char* _frame_id_type;
+      _frame_id_type frame_id;
 
     SetGoalRequest():
       node_id(0),
-      node_label("")
+      node_label(""),
+      frame_id("")
     {
     }
 
@@ -43,6 +46,11 @@ static const char SETGOAL[] = "rtabmap_ros/SetGoal";
       offset += 4;
       memcpy(outbuffer + offset, this->node_label, length_node_label);
       offset += length_node_label;
+      uint32_t length_frame_id = strlen(this->frame_id);
+      varToArr(outbuffer + offset, length_frame_id);
+      offset += 4;
+      memcpy(outbuffer + offset, this->frame_id, length_frame_id);
+      offset += length_frame_id;
       return offset;
     }
 
@@ -69,11 +77,20 @@ static const char SETGOAL[] = "rtabmap_ros/SetGoal";
       inbuffer[offset+length_node_label-1]=0;
       this->node_label = (char *)(inbuffer + offset-1);
       offset += length_node_label;
+      uint32_t length_frame_id;
+      arrToVar(length_frame_id, (inbuffer + offset));
+      offset += 4;
+      for(unsigned int k= offset; k< offset+length_frame_id; ++k){
+          inbuffer[k-1]=inbuffer[k];
+      }
+      inbuffer[offset+length_frame_id-1]=0;
+      this->frame_id = (char *)(inbuffer + offset-1);
+      offset += length_frame_id;
      return offset;
     }
 
     const char * getType(){ return SETGOAL; };
-    const char * getMD5(){ return "baadfb04a43ec26085eb7bebc9a80862"; };
+    const char * getMD5(){ return "375ab24253ceefb71e0472c1b972fff4"; };
 
   };
 

@@ -38,12 +38,17 @@ static const char LISTLABELS[] = "rtabmap_ros/ListLabels";
   class ListLabelsResponse : public ros::Msg
   {
     public:
+      uint32_t ids_length;
+      typedef int32_t _ids_type;
+      _ids_type st_ids;
+      _ids_type * ids;
       uint32_t labels_length;
       typedef char* _labels_type;
       _labels_type st_labels;
       _labels_type * labels;
 
     ListLabelsResponse():
+      ids_length(0), ids(NULL),
       labels_length(0), labels(NULL)
     {
     }
@@ -51,6 +56,23 @@ static const char LISTLABELS[] = "rtabmap_ros/ListLabels";
     virtual int serialize(unsigned char *outbuffer) const
     {
       int offset = 0;
+      *(outbuffer + offset + 0) = (this->ids_length >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (this->ids_length >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (this->ids_length >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (this->ids_length >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->ids_length);
+      for( uint32_t i = 0; i < ids_length; i++){
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_idsi;
+      u_idsi.real = this->ids[i];
+      *(outbuffer + offset + 0) = (u_idsi.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_idsi.base >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (u_idsi.base >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (u_idsi.base >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->ids[i]);
+      }
       *(outbuffer + offset + 0) = (this->labels_length >> (8 * 0)) & 0xFF;
       *(outbuffer + offset + 1) = (this->labels_length >> (8 * 1)) & 0xFF;
       *(outbuffer + offset + 2) = (this->labels_length >> (8 * 2)) & 0xFF;
@@ -69,6 +91,28 @@ static const char LISTLABELS[] = "rtabmap_ros/ListLabels";
     virtual int deserialize(unsigned char *inbuffer)
     {
       int offset = 0;
+      uint32_t ids_lengthT = ((uint32_t) (*(inbuffer + offset))); 
+      ids_lengthT |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1); 
+      ids_lengthT |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2); 
+      ids_lengthT |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3); 
+      offset += sizeof(this->ids_length);
+      if(ids_lengthT > ids_length)
+        this->ids = (int32_t*)realloc(this->ids, ids_lengthT * sizeof(int32_t));
+      ids_length = ids_lengthT;
+      for( uint32_t i = 0; i < ids_length; i++){
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_st_ids;
+      u_st_ids.base = 0;
+      u_st_ids.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_st_ids.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      u_st_ids.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      u_st_ids.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->st_ids = u_st_ids.real;
+      offset += sizeof(this->st_ids);
+        memcpy( &(this->ids[i]), &(this->st_ids), sizeof(int32_t));
+      }
       uint32_t labels_lengthT = ((uint32_t) (*(inbuffer + offset))); 
       labels_lengthT |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1); 
       labels_lengthT |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2); 
@@ -93,7 +137,7 @@ static const char LISTLABELS[] = "rtabmap_ros/ListLabels";
     }
 
     const char * getType(){ return LISTLABELS; };
-    const char * getMD5(){ return "17b562487ca772bdfa2c078ef00d870f"; };
+    const char * getMD5(){ return "eeaf81b9c58c5f0e5150e4704df1159c"; };
 
   };
 

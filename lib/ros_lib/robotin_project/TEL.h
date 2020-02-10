@@ -18,11 +18,14 @@ namespace robotin_project
       _current_velocity_type current_velocity;
       typedef float _demanded_velocity_type;
       _demanded_velocity_type demanded_velocity;
+      typedef uint32_t _demanded_duty_type;
+      _demanded_duty_type demanded_duty;
 
     TEL():
       target_velocity(0),
       current_velocity(0),
-      demanded_velocity(0)
+      demanded_velocity(0),
+      demanded_duty(0)
     {
     }
 
@@ -59,6 +62,11 @@ namespace robotin_project
       *(outbuffer + offset + 2) = (u_demanded_velocity.base >> (8 * 2)) & 0xFF;
       *(outbuffer + offset + 3) = (u_demanded_velocity.base >> (8 * 3)) & 0xFF;
       offset += sizeof(this->demanded_velocity);
+      *(outbuffer + offset + 0) = (this->demanded_duty >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (this->demanded_duty >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (this->demanded_duty >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (this->demanded_duty >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->demanded_duty);
       return offset;
     }
 
@@ -98,11 +106,16 @@ namespace robotin_project
       u_demanded_velocity.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
       this->demanded_velocity = u_demanded_velocity.real;
       offset += sizeof(this->demanded_velocity);
+      this->demanded_duty =  ((uint32_t) (*(inbuffer + offset)));
+      this->demanded_duty |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      this->demanded_duty |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      this->demanded_duty |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      offset += sizeof(this->demanded_duty);
      return offset;
     }
 
     const char * getType(){ return "robotin_project/TEL"; };
-    const char * getMD5(){ return "d5d57b5f775dd075674e81c58bfcab77"; };
+    const char * getMD5(){ return "2e49a10223afa0461b37939f53fc5c0c"; };
 
   };
 
